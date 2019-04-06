@@ -1,6 +1,6 @@
 Package: sacramentoR
 Type: Package
-Title: Sacramento Soil Moisture Accounting Model 
+Title: Distributed Sacramento Soil Moisture Accounting Model 
 Version: 0.0.1
 Author: Don Park
 Maintainer: Don Park <donpark@umass.edu>
@@ -12,9 +12,8 @@ Depends: R (>= 3.1.0)
 License: MIT
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Imports:
     tidyr
 Suggest:
     sp
-    

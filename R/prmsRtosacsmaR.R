@@ -22,6 +22,7 @@ prsmRtosacsmaR <- function(prms.param,
                            area_convert = TRUE) {
 
   library('sp')
+  library('rgdal')
 
   RawImport <- data.frame(1:length(prms.param$param$hru_x[[5]]), prms.param$param$hru_x[[5]], prms.param$param$hru_y[[5]],
                           prms.param$param$hru_area[[5]], prms.param$param$hru_elev[[5]])

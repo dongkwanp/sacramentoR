@@ -2,9 +2,9 @@
 #'
 #' Calculation of potential evapotranspiration based on the Hamon method
 #'
-#' @param Coeff Hamon PET Model Coefficient
-#' @param JDate Julian Date
-#' @param Tavg Average Temperature (deg C)
+#' @param Coeff Hamon PET Model Coefficient (Default: 1.2 from Lu (2005))
+#' @param JDate Julian Date (Time-series or numeric)
+#' @param Tavg Average Temperature (deg C) (Time-series or numeric)
 #' @param Latitude Latitude (Degrees)
 #' @param dayFUN Daylight hours function (Defaults to CBM Model)
 #'

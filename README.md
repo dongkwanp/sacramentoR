@@ -17,8 +17,12 @@ Questions? Comments? Concerns? Contact [Don](mailto:donpark@umass.edu).
 Dependencies
 ------------
 
-`sacramentoR` does not require any libraries to run. However, to use the
-translation functions from `prmsR`, the following library is required:
+`sacramentoR` requires the following libraries to run.
+
+    install.packages(c('xts'))
+
+In addition, the following packages are recommended to use the
+translation functions from `prmsR`:
 
     install.packages(c('sp', 'rgdal'))
 

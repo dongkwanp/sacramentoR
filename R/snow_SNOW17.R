@@ -233,7 +233,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
         W_q <- W_q + Q_w - Deficit
         Deficit <- 0
 
-      } else if ((Q_w + Q_w) < Deficit) {
+      } else if ((Q_w + W_q) < Deficit) {
         # Snow is not Ripe
         E <- 0
         W_i <- W_i + Q_w + W_q # W_i increases as water refreezes as heat deficit is decreased

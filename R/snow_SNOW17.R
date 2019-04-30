@@ -40,6 +40,11 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
   # If preserving the input
   if (preserveInput) {
+
+    if (verbose) {
+      print('Saving Inputs with Outputs...')
+    }
+
     Output$Input <- list()
     Output$Input$TimeSeries <- list()
     Output$Input$TimeSeries$Prcp <- Prcp

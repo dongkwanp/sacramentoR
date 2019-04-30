@@ -19,7 +19,7 @@ Dependencies
 
 `sacramentoR` requires the following libraries to run.
 
-    install.packages(c('xts'))
+    install.packages(c('tidyverse', 'xts', 'zoo'))
 
 In addition, the following packages are recommended to use the
 translation functions from `prmsR`:

@@ -65,7 +65,8 @@ modules are available for use:
 
 **Potential Evapotranspiration Models**
 
-1.  Hamon Potential Evapotranspiration Model
+1.  Hamon Method
+2.  Hargreaves Method (Planned)
 
 **Snow Models**
 
@@ -73,12 +74,12 @@ modules are available for use:
 
 **Hydrology Models**
 
-1.  Sacramento Soil Moisture Accounting Model
+1.  Sacramento Soil Moisture Accounting Model (In Progress)
 2.  Conversion to PRMS system
 
 **Routing Models**
 
-1.  Lohmann Routing Model
+1.  Lohmann Routing Model (Planned)
 
 **Utility Functions**
 

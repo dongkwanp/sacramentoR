@@ -194,7 +194,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
       P_a <- 33.86 * (29.9 - (0.335 * (Elevation/100)) + (0.00022 * (Elevation/100)^(2.4))) # Atmospheric Pressure (mb) (This equation is incorrectly written in Anderson 2006)
       e_sat <- 2.7489e8 * exp((-4278.63) / (T_a + 242.792)) # Saturation vapor pressure calculation
       # Melt due to rain (M_r)
-      Melt <- SBConst * dtp * (((T_a + 273)^4) - (273^4)) + (0.0125 * RAIN * (1 - f_r) * T_rain) + (8.5 * UADJ * (dtp/6) * ((0.9 * e_sat - 6.11) + 0.00057 * P_a * T_a))
+      Melt <- SBConst * dtp * (((T_a + 273)^4) - (273^4)) + (0.0125 * RAIN * f_r * T_rain) + (8.5 * UADJ * (dtp/6) * ((0.9 * e_sat - 6.11) + 0.00057 * P_a * T_a))
       Melt <- max(Melt, 0)
 
     } else if (RAIN <= (0.25 * dtp) & (T_a > MBASE)) {
@@ -239,8 +239,6 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
         W_i <- W_i + Q_w + W_q # W_i increases as water refreezes as heat deficit is decreased
         Deficit <- Deficit - Q_w - W_q
 
-      } else {
-        stop(paste0('Error on Snow Ripe Calculation on Time-Step: ', i))
       }
 
     } else { # Melt >= W_i

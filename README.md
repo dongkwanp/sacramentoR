@@ -52,6 +52,40 @@ Call the library using the following command.
 
     library('sacramentoR')
 
+Available Models List
+---------------------
+
+`sacramentoR` is still very early in development. However, the following
+modules are available for use:
+
+**Daylight Models**
+
+1.  N method
+2.  CBM Model
+
+**Potential Evapotranspiration Models**
+
+1.  Hamon Potential Evapotranspiration Model
+
+**Snow Models**
+
+1.  SNOW17
+
+**Hydrology Models**
+
+1.  Sacramento Soil Moisture Accounting Model
+2.  Conversion to PRMS system
+
+**Routing Models**
+
+1.  Lohmann Routing Model
+
+**Utility Functions**
+
+1.  A\_v calculation function
+2.  Area Ratio calculation function
+3.  Leap Year calculation function
+
 Troubleshooting
 ---------------
 

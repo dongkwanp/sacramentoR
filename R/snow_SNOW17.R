@@ -20,8 +20,6 @@
 
 snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE, verbose = FALSE, debug = FALSE) {
 
-  require('xts')
-
   JDate <- format(zoo::index(Prcp), '%j')
 
   # Preprocessing ----

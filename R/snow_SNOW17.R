@@ -14,7 +14,7 @@
 #' @param verbose Verbose Flag
 #' @param debug Debug Flag
 #'
-#' @return A list with various time-series outputs
+#' @return A list with various time-series outputs (xts objects)
 #' @details For details see Anderson (2006) and Anderson (1973)
 #' @export
 
@@ -34,10 +34,10 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
   # Environment Preparation ----
   Output <- list()
-  Output$ExcessLiquid <- rep(NA, times = length(Prcp))
-  Output$melt <- rep(NA, times = length(Prcp))
-  Output$SWE <- rep(NA, times = length(Prcp))
-  Output$Depth <- rep(NA, times = length(Prcp))
+  ExcessLiquid <- rep(NA, times = length(Prcp))
+  melt <- rep(NA, times = length(Prcp))
+  SWEO <- rep(NA, times = length(Prcp))
+  Depth <- rep(NA, times = length(Prcp))
   Output$FinalState <- list()
 
   # If preserving the input
@@ -292,9 +292,9 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
     }
 
     # Output Writing ====
-    Output$ExcessLiquid[i] <- E
-    Output$melt[i] <- Melt
-    Output$SWE[i] <- SWE
+    ExcessLiquid[i] <- E
+    melt[i] <- Melt
+    SWEO[i] <- SWE
 
     Output$FinalState$W_i <- W_i
     Output$FinalState$ATI <- ATI
@@ -303,6 +303,10 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
   } # End of Timestep
 
+  # Finalizing Output Writing
+  Output$ExcessLiquid <- xts::xts(ExcessLiquid, order.by = as.Date(zoo::index(Prcp)))
+  Output$melt <- xts::xts(melt, order.by = as.Date(zoo::index(Prcp)))
+  Output$SWE <- xts::xts(SWEO, order.by = as.Date(zoo::index(Prcp)))
 
   verbose.endTime <- Sys.time()
 

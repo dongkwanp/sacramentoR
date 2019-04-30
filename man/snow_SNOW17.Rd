@@ -32,7 +32,7 @@ snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
 \item{debug}{Debug Flag}
 }
 \value{
-A list with various time-series outputs
+A list with various time-series outputs (xts objects)
 }
 \description{
 Calculates snow via SNOW17 Model.  Current version is configured for Anderson 1973 version with some 2006 elements

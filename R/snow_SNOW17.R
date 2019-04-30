@@ -251,6 +251,10 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
     }
 
+    if (Deficit == 0) {
+      ATI <- 0
+    }
+
     # Density and Depth Computations ====
     # This is a TODO
 

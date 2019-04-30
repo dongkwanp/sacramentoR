@@ -12,7 +12,7 @@
 #' @details For details see Lu, Sun, McNulty, and Amatya (2005) and Haith and Shoemaker (1987)
 #' @export
 
-pet_hamon <- function(par, JDate, Tavg, Latitude, dayFUN = sacramentoR::daylight_CBM, ...) {
+pet_hamon <- function(par, JDate, Tavg, Latitude, dayFUN = sacramentoR::daylight_CBM) {
 
   daylight <- dayFUN(JDate, Latitude)
 

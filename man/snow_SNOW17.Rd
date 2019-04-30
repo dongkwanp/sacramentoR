@@ -5,8 +5,8 @@
 \title{SNOW-17 Snow Module}
 \usage{
 snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
-  dtt = 24, dtp = 24, calcA_v = FALSE, verbose = FALSE,
-  debug = FALSE)
+  dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE,
+  verbose = FALSE, debug = FALSE)
 }
 \arguments{
 \item{Param}{snow module parameter list}
@@ -24,6 +24,8 @@ snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
 \item{dtp}{Constant time interval of precipitation data (hours) (Default: 24 Hours)}
 
 \item{calcA_v}{If Latitude is above 60 degrees then calculate A_v for each time-step}
+
+\item{preserveInput}{Preserves the inputs as part of the Output}
 
 \item{verbose}{Verbose Flag}
 

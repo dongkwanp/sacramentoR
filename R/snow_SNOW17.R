@@ -10,6 +10,7 @@
 #' @param dtt Constant time interval of temperature data (hours) (Default: 24 Hours)
 #' @param dtp Constant time interval of precipitation data (hours) (Default: 24 Hours)
 #' @param calcA_v If Latitude is above 60 degrees then calculate A_v for each time-step
+#' @param preserveInput Preserves the inputs as part of the Output
 #' @param verbose Verbose Flag
 #' @param debug Debug Flag
 #'
@@ -17,7 +18,7 @@
 #' @details For details see Anderson (2006) and Anderson (1973)
 #' @export
 
-snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, verbose = FALSE, debug = FALSE) {
+snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE, verbose = FALSE, debug = FALSE) {
 
   JDate <- format(zoo::index(Prcp), '%j')
 
@@ -31,11 +32,26 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
   # Environment Preparation ----
   Output <- list()
-  Output$dischargeFlow <- rep(NA, times = length(Prcp))
+  Output$ExcessLiquid <- rep(NA, times = length(Prcp))
   Output$melt <- rep(NA, times = length(Prcp))
   Output$SWE <- rep(NA, times = length(Prcp))
   Output$Depth <- rep(NA, times = length(Prcp))
   Output$FinalState <- list()
+
+  # If preserving the input
+  if (preserveInput) {
+    Output$Input <- list()
+    Output$Input$TimeSeries <- list()
+    Output$Input$Param
+    Output$Input$TimeSeries$Prcp <- Prcp
+    Output$Input$TimeSeries$Tavg <- Tavg
+    Output$Input$Param <- Param
+    Output$Input$Elevation <- Elevation
+    Output$Input$InitialState <- InitialState
+    Output$Input$dtt <- dtt
+    Output$Input$dtp <- dtp
+    Output$Input$calcA_v <- calcA_v
+  }
 
   # Parameter Defining ----
   if (is.list(Param)){
@@ -64,7 +80,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   ATI <- InitialState[2] # Antecedent temperature index (degC)
   W_q <- InitialState[3] # Liquid water held by the snow (mm)
   Deficit <- InitialState[4] # Heat deficit (mm)
-  E <- 0
+  E <- 0 # Excess liquid water in the snow cover
 
   # Defining Constants ----
   SBConst <- 6.12e-10 # Stefan-Boltzman Constant (mm/K/hr)
@@ -261,7 +277,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
     }
 
     # Output Writing ====
-    Output$dischargeFlow[i] <- E
+    Output$ExcessLiquid[i] <- E
     Output$melt[i] <- Melt
     Output$SWE[i] <- SWE
 

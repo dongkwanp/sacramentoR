@@ -25,7 +25,7 @@ snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
 
 \item{calcA_v}{If Latitude is above 60 degrees then calculate A_v for each time-step}
 
-\item{preserveInput}{Preserves the inputs as part of the Output}
+\item{preserveInput}{Flag to preserve the input as part of the output}
 
 \item{verbose}{Verbose Flag}
 

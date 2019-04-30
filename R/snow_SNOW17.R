@@ -10,7 +10,7 @@
 #' @param dtt Constant time interval of temperature data (hours) (Default: 24 Hours)
 #' @param dtp Constant time interval of precipitation data (hours) (Default: 24 Hours)
 #' @param calcA_v If Latitude is above 60 degrees then calculate A_v for each time-step
-#' @param preserveInput Preserves the inputs as part of the Output
+#' @param preserveInput Flag to preserve the input as part of the output
 #' @param verbose Verbose Flag
 #' @param debug Debug Flag
 #'

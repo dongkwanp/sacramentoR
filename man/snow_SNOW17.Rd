@@ -26,6 +26,8 @@ snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
 \item{calcA_v}{If Latitude is above 60 degrees then calculate A_v for each time-step}
 
 \item{verbose}{Verbose Flag}
+
+\item{debug}{Debug Flag}
 }
 \value{
 A list with various time-series outputs

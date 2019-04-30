@@ -11,6 +11,7 @@
 #' @param dtp Constant time interval of precipitation data (hours) (Default: 24 Hours)
 #' @param calcA_v If Latitude is above 60 degrees then calculate A_v for each time-step
 #' @param verbose Verbose Flag
+#' @param debug Debug Flag
 #'
 #' @return A list with various time-series outputs
 #' @details For details see Anderson (2006) and Anderson (1973)

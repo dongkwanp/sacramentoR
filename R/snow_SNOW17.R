@@ -42,7 +42,6 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   if (preserveInput) {
     Output$Input <- list()
     Output$Input$TimeSeries <- list()
-    Output$Input$Param
     Output$Input$TimeSeries$Prcp <- Prcp
     Output$Input$TimeSeries$Tavg <- Tavg
     Output$Input$Param <- Param

@@ -20,6 +20,8 @@
 
 snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE, verbose = FALSE, debug = FALSE) {
 
+  require('xts')
+
   JDate <- format(zoo::index(Prcp), '%j')
 
   # Preprocessing ----
@@ -84,7 +86,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   ATI <- InitialState[2] # Antecedent temperature index (degC)
   W_q <- InitialState[3] # Liquid water held by the snow (mm)
   Deficit <- InitialState[4] # Heat deficit (mm)
-  E <- 0 # Excess liquid water in the snow cover
+  E <- 0
 
   # Defining Constants ----
   SBConst <- 6.12e-10 # Stefan-Boltzman Constant (mm/K/hr)
@@ -92,7 +94,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   c_i <- 0.5 # Specific Heat of Ice (cal * gm^-1 * degC^-1)
   f_r <- 1 - f_s # Fraction of precipitation in the form of rain
 
-  if (f_s == 1) f_r <- 1 # A bit of a loophole from Wi's structure
+  if (f_s == 1) f_r <- 1 # A bit of a loophole to coincide with MATLAB version
 
 
 
@@ -119,89 +121,97 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
     if (verbose) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))
 
+    T_a <- as.numeric(zoo::coredata(Tavg[i]))
+    P_r <- as.numeric(zoo::coredata(Prcp[i]))
+    Date <- as.Date(zoo::index(Prcp[i]))
+
+
+    T_rain <- max(T_a, 0) # Temperature of the Rain
+    T_n <- min(T_a, 0) # Temperature of new snow
+
     # Precipitation Forming ====
-    if (Tavg[i] <= PXTEMP) {
+    if (T_a <= PXTEMP) {
       # Temp is cold for snow
-      NEW_SNOW <- as.numeric(zoo::coredata(Prcp[i]))
+      NEW_SNOW <- P_r
       RAIN <- 0
     } else {
       # No snow, all rain
       NEW_SNOW <- 0
-      RAIN <- as.numeric(zoo::coredata(Prcp[i]))
+      RAIN <- P_r
     }
 
     P_n <- NEW_SNOW * f_s * SCF # Water equivalent of new snowfall (mm)
-    T_n <- min(Tavg[i], 0)
+    W_i <- W_i + P_n # Water equivalent of the ice portion of the snow cover (mm)
+    E <- 0 # Excess liquid water in the snow cover
 
     # Temperature of new snow
     deltaD_p <- -((T_n * P_n) / (L_f / c_i)) # Change in heat deficit due to snowfall (mm)
 
     # Snow Cover Accumulation ====
-    W_i <- W_i + P_n # Water equivalent of the ice portion of the snow cover (mm)
 
     # Density of New Snow
-    if(Tavg[i] <= -15) {
+    if(T_a <= -15) {
       rho_n <- 0.05
     } else {
-      rho_n <- 0.05 + 0.0017 * (Tavg[i] ^ 1.5)
+      rho_n <- 0.05 + 0.0017 * (T_a ^ 1.5)
     }
 
     H_n <- (0.1 * P_n)/rho_n # Depth of new snowfall (cm)
 
 
     # Energy Exchange at Snow/Air Interface ====
-    T_rain <- max(Tavg[i], 0) # Temperature of the Rain
 
     # Seasonal Variation and Melt Factor ####
-    if (utility_isLeapYear(as.numeric(format(zoo::index(Prcp[i]), '%Y')))) { # If Leap year
+    if (utility_isLeapYear(as.numeric(format(Date, '%Y')))) { # If Leap year
       N <- as.numeric(JDate[i]) - 81
       Days <- 366
     } else { # Not a leap year
       N <- as.numeric(JDate[i]) - 80
       Days <- 365
     }
+
     S_v <- 0.5 * sin((N * 2 * pi)/Days) + 0.5
 
     # If latitude is above 60 A_v should be recalculated per time-step
     if (calcA_v) {
-      A_v <- utility_A_v(as.Date(zoo::index(Prcp[i])))
+      A_v <- utility_A_v(Date)
     }
+
 
     M_f <- (dtt/6) * (S_v * A_v * (MFMAX - MFMIN) + MFMIN) # Seasional varying non-rain melt feactor
 
     # Energy Exchange when No Surface Melt ####
     # Handling Antecedent Temperature Index
-    if (ATI > 0) {
-      ATI <- 0
-    } else if (P_n > (1.5 * dtt)) {
+    if (P_n > (1.5 * dtt)) {
       ATI <- T_n
     } else {
       TIPM_deltat_t <- 1.0 - ((1.0 - TIPM)^(dtt/6))
-      ATI <- ATI + TIPM_deltat_t * (Tavg[i] - ATI)  #Antecedent Temperature Index
+      ATI <- ATI + TIPM_deltat_t * (T_a - ATI)  #Antecedent Temperature Index
     }
     ATI <- min(ATI, 0)
+
 
     if (RAIN > (0.25 * dtp)) {
       # Rain-on-Snow Melt ####
       P_a <- 33.86 * (29.9 - (0.335 * (Elevation/100)) + (0.00022 * (Elevation/100)^(2.4))) # Atmospheric Pressure (mb) (This equation is incorrectly written in Anderson 2006)
-      e_sat <- 2.7489e8 * exp((-4278.63) / (Tavg[i] + 242.792)) # Saturation vapor pressure calculation
+      e_sat <- 2.7489e8 * exp((-4278.63) / (T_a + 242.792)) # Saturation vapor pressure calculation
       # Melt due to rain (M_r)
-      Melt <- SBConst * dtp * (((Tavg[i] + 273)^4) - (273^4)) + (0.0125 * RAIN * (1 - f_r) * T_rain) + (8.5 * UADJ * (dtp/6) * ((0.9 * e_sat - 6.11) + 0.00057 * P_a * Tavg[i]))
+      Melt <- SBConst * dtp * (((T_a + 273)^4) - (273^4)) + (0.0125 * RAIN * (1 - f_r) * T_rain) + (8.5 * UADJ * (dtp/6) * ((0.9 * e_sat - 6.11) + 0.00057 * P_a * T_a))
+      Melt <- max(Melt, 0)
 
-    } else if (RAIN <= (0.25 * dtp) & (Tavg[i] > MBASE)) {
+    } else if (RAIN <= (0.25 * dtp) & (T_a > MBASE)) {
       # Non-Rain Melt ####
       # Melt in no rain (M_nr)
-      Melt <- (M_f * (Tavg[i] - MBASE) * (dtp/dtt)) + 0.0125 * RAIN * T_rain
+      Melt <- (M_f * (T_a - MBASE) * (dtp/dtt)) + 0.0125 * RAIN * T_rain
+      Melt <- max(Melt, 0)
     } else {
       Melt <- 0
     }
 
-    Melt <- max(Melt, 0)
-
     # Internal State of Snow Cover/Ripeness of the Snow Cover ====
     delta_D_t <- NMF * (dtp/6) * (M_f/MFMAX) * (ATI - T_n)
 
-    Deficit <- max(Deficit + deltaD_p + delta_D_t, 0) # Heat Deficit (mm)
+    Deficit <- max((Deficit + deltaD_p + delta_D_t), 0) # Heat Deficit (mm)
 
     # Limits of heat deficit
     if (Deficit > (0.33 * W_i)) Deficit <- (0.33 * W_i)
@@ -232,7 +242,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
         Deficit <- Deficit - Q_w - W_q
 
       } else {
-        stop(paste0('Error on Snow Ripe Calculation on Time-Step: ', zoo::index(Prcp[i])))
+        stop(paste0('Error on Snow Ripe Calculation on Time-Step: ', i))
       }
 
     } else { # Melt >= W_i
@@ -240,7 +250,8 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
       Melt <- W_i + W_q
       W_i <- 0
       W_q <- 0
-      Q_w <- Melt + (RAIN * f_r) # Direct Runoff Scenario (Check f_r is supposed to be there)
+      Q_w <- Melt + RAIN * f_r # Direct Runoff Scenario (Check f_r is supposed to be there)
+      E <- Q_w
 
     }
 
@@ -276,7 +287,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
     }
 
     if (debug) {
-      print(paste0('E: ', E, ' Melt: ', Melt, ' SWE: ', SWE, ' W_i: ', W_i, ' ATI: ', ATI, ' W_q: ', W_q, ' Deficit: ', Deficit))
+      print(paste0('E: ', E, ' Melt: ', Melt, ' SWE: ', SWE, ' W_i: ', W_i, ' ATI: ', ATI, ' W_q: ', W_q, ' Deficit: ', Deficit, ' gmro: ', gmro, ' f_s: ', f_s, ' f_r: ', f_r))
 
     }
 

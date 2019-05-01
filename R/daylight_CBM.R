@@ -5,12 +5,13 @@
 #' @param Latitude Latitude in Degrees
 #' @param JDate Julian Day of the Year
 #' @param p Daylength coefficient (Default: Constant based on Astronomical calendar)
+#' @param LeapYear Leap Year Flag
 #'
 #' @return Daylight hours
 #' @details For details see Forsythe (1995) and Schoolfield (1982)
 #' @export
 
-daylight_CBM <- function(JDate, Latitude, p = 0.833) {
+daylight_CBM <- function(JDate, Latitude, p = 0.833, ...) {
 
   # Predicting angle of revolution angle (theta) from the day of the year (JDate)
   theta <- 0.2163108 + 2 * base::atan(0.9671396 * base::tan(0.0086 * (JDate - 186)))

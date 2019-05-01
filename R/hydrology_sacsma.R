@@ -464,7 +464,7 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
     Output$State$adimc_state <- xts::xts(adimc_state, order.by = TimeSteps)
   }
 
-  Output$Output$Streamflow <- xts::xts(streamflow.ts, order.by = TimeSteps)
+  Output$Output$TotalStreamflow <- xts::xts(streamflow.ts, order.by = TimeSteps)
   Output$Output$Surfaceflow <- xts::xts(surfaceflow.ts, order.by = TimeSteps)
   Output$Output$Baseflow <- xts::xts(baseflow.ts, order.by = TimeSteps)
   Output$Output$AET <- xts::xts(aet.ts, order.by = TimeSteps)

@@ -32,6 +32,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
   # Environment Preparation ----
   Output <- list()
+  Output$Output <- list()
   ExcessLiquid <- rep(NA, times = length(Prcp))
   melt <- rep(NA, times = length(Prcp))
   SWEO <- rep(NA, times = length(Prcp))
@@ -304,9 +305,9 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   } # End of Timestep
 
   # Finalizing Output Writing
-  Output$ExcessLiquid <- xts::xts(ExcessLiquid, order.by = as.Date(zoo::index(Prcp)))
-  Output$melt <- xts::xts(melt, order.by = as.Date(zoo::index(Prcp)))
-  Output$SWE <- xts::xts(SWEO, order.by = as.Date(zoo::index(Prcp)))
+  Output$Output$ExcessLiquid <- xts::xts(ExcessLiquid, order.by = as.Date(zoo::index(Prcp)))
+  Output$Output$melt <- xts::xts(melt, order.by = as.Date(zoo::index(Prcp)))
+  Output$Output$SWE <- xts::xts(SWEO, order.by = as.Date(zoo::index(Prcp)))
 
   verbose.endTime <- Sys.time()
 

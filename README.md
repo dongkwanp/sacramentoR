@@ -85,9 +85,10 @@ modules are available for use:
 
 **Utility Functions**
 
-1.  A\_v calculation function
-2.  Area Ratio calculation function
-3.  Leap Year calculation function
+1.  prmsR to sacramentoR translation function
+2.  A\_v calculation function
+3.  Area Ratio calculation function
+4.  Leap Year calculation function
 
 Troubleshooting
 ---------------

@@ -26,13 +26,6 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
     print('Initializing SAC-SMA...')
   }
 
-  # Converting to vectors from xts object (but preserving xts)
-  TimeSteps <- zoo::index(Prcpts)
-  Prcpts.xts <- Prcpts
-  Prcpts <- as.vector(Prcpts.xts)
-  PETts.xts <- PETts
-  PETts <- as.vector(PETts.xts)
-
   # Environment Preparation ----
   Output <- list()
   Output$State <- list()
@@ -48,11 +41,18 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
 
       Output$Input <- list()
       Output$Input$TimeSeries <- list()
-      Output$Input$TimeSeries$Prcpts <- Prcpts.xts
-      Output$Input$TimeSeries$PETts <- PETts.xts
+      Output$Input$TimeSeries$Prcpts <- Prcpts
+      Output$Input$TimeSeries$PETts <- PETts
       Output$Input$Param <- Param
       Output$Input$InitialState <- InitialState
   }
+
+  # Converting to vectors from xts object (but preserving xts)
+  TimeSteps <- zoo::index(Prcpts)
+  Prcpts.xts <- Prcpts
+  Prcpts <- as.vector(Prcpts.xts)
+  PETts.xts <- PETts
+  PETts <- as.vector(PETts.xts)
 
   # Parameter Defining ----
   if (is.list(Param)) {

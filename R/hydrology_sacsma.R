@@ -462,7 +462,7 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
   }
 
   Output$Output$TotalStreamflow <- xts::xts(streamflow.ts, order.by = TimeSteps)
-  Output$Output$Surfaceflow <- xts::xts(surfaceflow.ts, order.by = TimeSteps)
+  Output$Output$Surfaceflow <- xts::xts(surfaceflow.ts, order.by = TimeSteps) # Surfaceflow includes Interflow, so direct runoff is surfaceflow - interflow
   Output$Output$Baseflow <- xts::xts(baseflow.ts, order.by = TimeSteps)
   Output$Output$AET <- xts::xts(aet.ts, order.by = TimeSteps)
   Output$Output$Interflow <- xts::xts(interflow.ts, order.by = TimeSteps)

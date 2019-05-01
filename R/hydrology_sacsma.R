@@ -3,8 +3,8 @@
 #' Calculates the Sacramento Moisture Accounting (SAC-SMA) Model
 #'
 #' @param Param hydrology module parameter list
-#' @param Prcp Precipitation/Snow Melt continuous time-series (mm) (xts object) (same duration as PET)
-#' @param PET Potential Evapotranspiration continuous time-series (deg C) (xts object) (same duration as Prcp)
+#' @param Prcpts Precipitation/Snow Melt continuous time-series (mm) (xts object) (same duration as PETts)
+#' @param PETts Potential Evapotranspiration continuous time-series (deg C) (xts object) (same duration as Prcpts)
 #' @param InitialState Initial state vector (uztwc, uzfwc, lztwc, lzfsc, lzfpc, adimc)
 #' @param thresholdZero Threshold for Zero
 #' @param ninc_min Minimum number of time increments that interval is divided into (Default: 20)
@@ -17,7 +17,7 @@
 #' @details For details see NOAA rfs:23sacsma.wpd (2002) and Blasone, et. al. (2008)
 #' @export
 
-hydrology_sacsma <- function(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = FALSE, preserveState = TRUE, verbose = FALSE, debug = FALSE) {
+hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = FALSE, preserveState = TRUE, verbose = FALSE, debug = FALSE) {
 
   # Preprocessing ----
   verbose.startTime <- Sys.time()
@@ -31,8 +31,8 @@ hydrology_sacsma <- function(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500
   TimeSteps <- zoo::index(Prcpts)
   Prcpts.xts <- Prcpts
   Prcpts <- as.vector(Prcpts.xts)
-  PET.xts <- PET
-  PET <- as.vector(PET.xts)
+  PETts.xts <- PETts
+  PETts <- as.vector(PETts.xts)
 
   # Environment Preparation ----
   Output <- list()
@@ -50,7 +50,7 @@ hydrology_sacsma <- function(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500
       Output$Input <- list()
       Output$Input$TimeSeries <- list()
       Output$Input$TimeSeries$Prcpts <- Prcpts.xts
-      Output$Input$TimeSeries$PET <- PET.xts
+      Output$Input$TimeSeries$PETts <- PETts.xts
       Output$Input$Param <- Param
       Output$Input$InitialState <- InitialState
   }
@@ -128,7 +128,7 @@ hydrology_sacsma <- function(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500
     Prcp <- Prcpts[i] # Adjusted precipitation from snow module (assumed)
 
     # Computing Evapotranspiration Loss ====
-    evapDemand <- PET[i]
+    evapDemand <- PETts[i]
 
     # ET Module 1 - ET from Upper Zone Tension Water Storage ####
     ET1 <- evapDemand * (uztwc/uztwm)
@@ -456,19 +456,19 @@ hydrology_sacsma <- function(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500
   }
 
   if (preserveState) {
-    Output$State$uztwc_state <- uztwc_state
-    Output$State$uzfwc_state <- uzfwc_state
-    Output$State$lztwc_state <- lztwc_state
-    Output$State$lzfpc_state <- lzfpc_state
-    Output$State$lzfsc_state <- lzfsc_state
-    Output$State$adimc_state <- adimc_state
+    Output$State$uztwc_state <- xts::xts(uztwc_state, order.by = Timesteps)
+    Output$State$uzfwc_state <- xts::xts(uzfwc_state, order.by = Timesteps)
+    Output$State$lztwc_state <- xts::xts(lztwc_state, order.by = Timesteps)
+    Output$State$lzfpc_state <- xts::xts(lzfpc_state, order.by = Timesteps)
+    Output$State$lzfsc_state <- xts::xts(lzfsc_state, order.by = Timesteps)
+    Output$State$adimc_state <- xts::xts(adimc_state, order.by = Timesteps)
   }
 
-  Output$Output$Streamflow <- streamflow.ts
-  Output$Output$Surfaceflow <- surfaceflow.ts
-  Output$Output$Baseflow <- baseflow.ts
-  Output$Output$AET <- aet.ts
-  Output$Output$Interflow <- interflow.ts
+  Output$Output$Streamflow <- xts::xts(streamflow.ts, order.by = Timesteps)
+  Output$Output$Surfaceflow <- xts::xts(surfaceflow.ts, order.by = Timesteps)
+  Output$Output$Baseflow <- xts::xts(baseflow.ts, order.by = Timesteps)
+  Output$Output$AET <- xts::xts(aet.ts, order.by = Timesteps)
+  Output$Output$Interflow <- xts::xts(interflow.ts, order.by = Timesteps)
 
   return(Output)
 }

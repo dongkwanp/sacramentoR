@@ -4,7 +4,7 @@
 \alias{hydrology_sacsma}
 \title{Sacramento Moisture Accounting Module (SAC-SMA)}
 \usage{
-hydrology_sacsma(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500,
+hydrology_sacsma(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500,
   500, 0), thresholdZero = 1e-05, ninc_min = 20,
   preserveInput = FALSE, preserveState = TRUE, verbose = FALSE,
   debug = FALSE)
@@ -12,7 +12,9 @@ hydrology_sacsma(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500,
 \arguments{
 \item{Param}{hydrology module parameter list}
 
-\item{PET}{Potential Evapotranspiration continuous time-series (deg C) (xts object) (same duration as Prcp)}
+\item{Prcpts}{Precipitation/Snow Melt continuous time-series (mm) (xts object) (same duration as PETts)}
+
+\item{PETts}{Potential Evapotranspiration continuous time-series (deg C) (xts object) (same duration as Prcpts)}
 
 \item{InitialState}{Initial state vector (uztwc, uzfwc, lztwc, lzfsc, lzfpc, adimc)}
 
@@ -27,8 +29,6 @@ hydrology_sacsma(Param, Prcpts, PET, InitialState = c(0, 0, 500, 500,
 \item{verbose}{Verbose Flag}
 
 \item{debug}{Debug Flag}
-
-\item{Prcp}{Precipitation/Snow Melt continuous time-series (mm) (xts object) (same duration as PET)}
 }
 \value{
 A list of various time-series as an xts object

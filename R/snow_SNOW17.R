@@ -12,13 +12,12 @@
 #' @param calcA_v If Latitude is above 60 degrees then calculate A_v for each time-step
 #' @param preserveInput Flag to preserve the input as part of the output
 #' @param verbose Verbose Flag
-#' @param debug Debug Flag
 #'
 #' @return A list with various time-series outputs (xts objects)
 #' @details For details see Anderson (2006) and Anderson (1973)
 #' @export
 
-snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE, verbose = FALSE, debug = FALSE) {
+snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE, verbose = FALSE) {
 
   JDate <- format(zoo::index(Prcp), '%j')
 
@@ -94,26 +93,6 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   f_r <- 1 - f_s # Fraction of precipitation in the form of rain
 
   if (f_s == 1) f_r <- 1 # A bit of a loophole to coincide with MATLAB version
-
-
-
-  # Outputting for Debug
-  if (debug) {
-    print('##########')
-    print(paste0('Starting Time: ', format(verbose.startTime)))
-    print(paste0('Total Number of Timesteps: ', verbose.timeStepTotal))
-    print('##########')
-    print('Printing Parameter Values')
-    for(i in names(Param)) print(paste0('Param: ', i, ' | Value: ', eval(parse(text = i))))
-    print('##########')
-    print('Initial State: W_i | Value: ', W_i)
-    print('Initial State: ATI | Value: ', ATI)
-    print('Initial State: W_q | Value: ', W_q)
-    print('Initial State: Deficit | Value: ', Deficit)
-    print('##########')
-    print('Running the model...')
-  }
-
 
   # Primary Loop ----
   for(i in 1:length(Prcp)) {
@@ -284,11 +263,6 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
       E <- E + gmro
       SWE <- 0
-
-    }
-
-    if (debug) {
-      print(paste0('E: ', E, ' Melt: ', Melt, ' SWE: ', SWE, ' W_i: ', W_i, ' ATI: ', ATI, ' W_q: ', W_q, ' Deficit: ', Deficit, ' gmro: ', gmro, ' f_s: ', f_s, ' f_r: ', f_r))
 
     }
 

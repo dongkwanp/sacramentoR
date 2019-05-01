@@ -4,18 +4,18 @@
 \alias{pet_hamon}
 \title{Hamon Method for Potential Evapotranspiration}
 \usage{
-pet_hamon(par, JDate, Tavg, Latitude, dayFUN = sacramentoR::daylight_CBM)
+pet_hamon(par, Date, Tavg, Latitude, dayFUN = sacramentoR::daylight_CBM)
 }
 \arguments{
-\item{JDate}{Julian Date (Time-series or numeric)}
+\item{Date}{Date (Time-series vector or as a Date Object)}
 
-\item{Tavg}{Average Temperature (deg C) (Time-series or numeric)}
+\item{Tavg}{Average Temperature (deg C) (Time-series vector or numeric)}
 
 \item{Latitude}{Latitude (Degrees)}
 
 \item{dayFUN}{Daylight hours function (Defaults to CBM Model)}
 
-\item{Coeff}{Hamon PET Model Coefficient (Default: 1.2 from Lu (2005))}
+\item{Coeff}{Hamon PET Model Coefficient (Default: 1 from Lu (2005))}
 }
 \value{
 Hamon Potential Evapotranspiration Value

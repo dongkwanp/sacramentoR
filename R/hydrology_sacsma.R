@@ -11,13 +11,12 @@
 #' @param preserveInput Flag to preserve the input as part of the output
 #' @param preserveState Flag to preserve state of the model at each time-step
 #' @param verbose Verbose Flag
-#' @param debug Debug Flag
 #'
 #' @return A list of various time-series as an xts object
 #' @details For details see NOAA rfs:23sacsma.wpd (2002) and Blasone, et. al. (2008)
 #' @export
 
-hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = FALSE, preserveState = TRUE, verbose = FALSE, debug = FALSE) {
+hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = FALSE, preserveState = TRUE, verbose = FALSE) {
 
   # Preprocessing ----
   verbose.startTime <- Sys.time()
@@ -239,10 +238,6 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
 
     # Determine computational time increments for the basic time interval
     ninc <- max(floor(1 + (0.2 * (uzfwc + twx))), ninc_min) # Number of time increments that interval is divided into for SMA
-
-    if (debug) {
-      print(paste0('Timestep: ', i, ' ninc : ', ninc, ' where ninc_min : ', ninc_min))
-    }
 
     dinc <- 1.0 / ninc # Length of each increment in days
     pinc <- twx / ninc # Amount of available moisture for each increment

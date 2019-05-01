@@ -2,7 +2,7 @@
 % Please edit documentation in R/hydrology_sacsma.R
 \name{hydrology_sacsma}
 \alias{hydrology_sacsma}
-\title{Sacramento Moisture Accounting Module (SAC-SMA)}
+\title{Sacramento Soil Moisture Accounting Module (SAC-SMA)}
 \usage{
 hydrology_sacsma(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500,
   500, 0), thresholdZero = 1e-05, ninc_min = 20,
@@ -34,7 +34,7 @@ hydrology_sacsma(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500,
 A list of various time-series as an xts object
 }
 \description{
-Calculates the Sacramento Moisture Accounting (SAC-SMA) Model
+Calculates the Sacramento Soil Moisture Accounting (SAC-SMA) Model
 }
 \details{
 For details see NOAA rfs:23sacsma.wpd (2002) and Blasone, et. al. (2008)

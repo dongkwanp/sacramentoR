@@ -1,6 +1,6 @@
-#' Sacramento Moisture Accounting Module (SAC-SMA)
+#' Sacramento Soil Moisture Accounting Module (SAC-SMA)
 #'
-#' Calculates the Sacramento Moisture Accounting (SAC-SMA) Model
+#' Calculates the Sacramento Soil Moisture Accounting (SAC-SMA) Model
 #'
 #' @param Param hydrology module parameter list
 #' @param Prcpts Precipitation/Snow Melt continuous time-series (mm) (xts object) (same duration as PETts)
@@ -201,7 +201,7 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
     if (lztwc < thresholdZero) lztwc <- 0
 
     # ET Module 5 - ET from additional impervious (ADIMP) area ####
-    ET5 <- ET1 + (red + ET2) * ((adimc - ET1 - uztwc) / (uztwm + lztwm))
+    ET5 <- ET1 + (((red + ET2) * (adimc - ET1 - uztwc)) / (uztwm + lztwm))
 
     if (ET5 < 0) warning(paste0('Timestep: ', i, ' has ET5 < 0 where ET5 = ', ET5))
 
@@ -277,10 +277,10 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
       sbf <- sbf + bf_p
 
       bf_s <- lzfsc * dlzs # Baseflow from free water supplemental storage
-      lzfpc <- lzfpc - bf_p
+      lzfsc <- lzfsc - bf_p
 
       # Checking if below threshold and resetting
-      if (lzfpc <= 0.0001) {
+      if (lzfsc <= 0.0001) {
         bf_s <- lzfsc + bf_s
         lzfsc <- 0
       }

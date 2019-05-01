@@ -456,19 +456,19 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
   }
 
   if (preserveState) {
-    Output$State$uztwc_state <- xts::xts(uztwc_state, order.by = Timesteps)
-    Output$State$uzfwc_state <- xts::xts(uzfwc_state, order.by = Timesteps)
-    Output$State$lztwc_state <- xts::xts(lztwc_state, order.by = Timesteps)
-    Output$State$lzfpc_state <- xts::xts(lzfpc_state, order.by = Timesteps)
-    Output$State$lzfsc_state <- xts::xts(lzfsc_state, order.by = Timesteps)
-    Output$State$adimc_state <- xts::xts(adimc_state, order.by = Timesteps)
+    Output$State$uztwc_state <- xts::xts(uztwc_state, order.by = TimeSteps)
+    Output$State$uzfwc_state <- xts::xts(uzfwc_state, order.by = TimeSteps)
+    Output$State$lztwc_state <- xts::xts(lztwc_state, order.by = TimeSteps)
+    Output$State$lzfpc_state <- xts::xts(lzfpc_state, order.by = TimeSteps)
+    Output$State$lzfsc_state <- xts::xts(lzfsc_state, order.by = TimeSteps)
+    Output$State$adimc_state <- xts::xts(adimc_state, order.by = TimeSteps)
   }
 
-  Output$Output$Streamflow <- xts::xts(streamflow.ts, order.by = Timesteps)
-  Output$Output$Surfaceflow <- xts::xts(surfaceflow.ts, order.by = Timesteps)
-  Output$Output$Baseflow <- xts::xts(baseflow.ts, order.by = Timesteps)
-  Output$Output$AET <- xts::xts(aet.ts, order.by = Timesteps)
-  Output$Output$Interflow <- xts::xts(interflow.ts, order.by = Timesteps)
+  Output$Output$Streamflow <- xts::xts(streamflow.ts, order.by = TimeSteps)
+  Output$Output$Surfaceflow <- xts::xts(surfaceflow.ts, order.by = TimeSteps)
+  Output$Output$Baseflow <- xts::xts(baseflow.ts, order.by = TimeSteps)
+  Output$Output$AET <- xts::xts(aet.ts, order.by = TimeSteps)
+  Output$Output$Interflow <- xts::xts(interflow.ts, order.by = TimeSteps)
 
   return(Output)
 }

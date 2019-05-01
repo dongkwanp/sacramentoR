@@ -15,7 +15,7 @@
 
 # Note to self: This requires the following additional libraries: sp
 
-prsmRtosacsmaR <- function(prms.param,
+utility_prsmRtosacsmaR <- function(prms.param,
                            projection.from = "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=1,1,-1,0,0,0,0 +units=m +no_defs",
                            projection.to = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
                            elev_convert = TRUE,

@@ -14,7 +14,7 @@
 
 pet_hamon <- function(par, Date, Tavg, Latitude, dayFUN = sacramentoR::daylight_CBM) {
 
-  JDate <- format(as.Date(Date), '%j')
+  JDate <- as.numeric(format(as.Date(Date), '%j'))
 
   daylight <- dayFUN(JDate, Latitude)
 

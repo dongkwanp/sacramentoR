@@ -16,7 +16,9 @@ pet_hamon <- function(par, Date, Tavg, Latitude, dayFUN = sacramentoR::daylight_
 
   JDate <- as.numeric(format(as.Date(Date), '%j'))
 
-  daylight <- dayFUN(JDate, Latitude)
+  LeapYear <- utility_isLeapYear(as.numeric(format(Date, '%Y')))
+
+  daylight <- dayFUN(JDate, Latitude, LeapYear)
 
   # ESAT is the saturated vapor pressure (mb) at the given T
   ESAT <- 6.108 * base::exp(17.26939 * (Tavg / (Tavg + 237.3)))

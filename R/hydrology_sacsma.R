@@ -124,6 +124,8 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
   # Pervious - Calculating through the time-steps ----
   for (i in 1:length(Prcpts)) {
 
+    if (verbose) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))
+
     Prcp <- Prcpts[i] # Adjusted precipitation from snow module (assumed)
 
     # Computing Evapotranspiration Loss ====
@@ -464,6 +466,11 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
   Output$Output$Baseflow <- xts::xts(baseflow.ts, order.by = TimeSteps)
   Output$Output$AET <- xts::xts(aet.ts, order.by = TimeSteps)
   Output$Output$Interflow <- xts::xts(interflow.ts, order.by = TimeSteps)
+
+  if (verbose) {
+    verbose.endTime <- Sys.time()
+    print(paste0('Snow Module Run Time: ', format(verbose.endTime - verbose.startTime)))
+  }
 
   return(Output)
 }

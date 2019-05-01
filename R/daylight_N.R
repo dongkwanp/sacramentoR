@@ -4,15 +4,17 @@
 #'
 #' @param Latitude Latitude in Degrees
 #' @param JDate Julian Day of the Year
+#' @param LeapYear Leap Year Flag
 #'
 #' @return Daylight hours
 #' @details For details see Allen (1998)
 #' @export
 
-daylight_N <- function(JDate, Latitude) {
+daylight_N <- function(JDate, Latitude, LeapYear = FALSE) {
 
   # Declination
-  delta <- 0.409 * base::sin(((2 * pi)/365) * JDate - 1.39)
+  if (LeapYear) Year <- 366 else Year <- 365
+  delta <- 0.409 * base::sin(((2 * pi)/Year) * JDate - 1.39)
 
   # Sunet hour angle
   omega <- base::acos(-base::tan(Latitude * pi/180) * base::tan(delta))

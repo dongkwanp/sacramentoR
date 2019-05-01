@@ -16,7 +16,7 @@
 #' @details For details see NOAA rfs:23sacsma.wpd (2002) and Blasone, et. al. (2008)
 #' @export
 
-hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = TRUE, preserveState = TRUE, verbose = FALSE) {
+hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = FALSE, preserveState = FALSE, verbose = FALSE) {
 
   # Preprocessing ----
   verbose.startTime <- Sys.time()

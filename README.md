@@ -71,15 +71,17 @@ modules are available for use:
 **Snow Models**
 
 1.  SNOW17
+2.  Isnobal (Planned)
 
 **Hydrology Models**
 
-1.  Sacramento Soil Moisture Accounting Model (In Progress)
-2.  Conversion to PRMS system
+1.  Sacramento Soil Moisture Accounting Model
+2.  Conversion from PRMS (via
+    [prmsR](https://projects.cloudwaterlab.com/UMass/prmsR))
 
 **Routing Models**
 
-1.  Lohmann Routing Model (Planned)
+1.  Lohmann Routing Model (In Progress)
 
 **Utility Functions**
 

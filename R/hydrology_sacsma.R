@@ -121,7 +121,7 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
   surfaceflow.ts <- rep(NA, times = length(Prcpts)) # Modelled Surface and Subsurface Flow
   interflow.ts <- rep(NA, times = length(Prcpts)) # Modelled Interflow Flow
 
-  # Pervious - Calculating through the time-steps ----
+  # Calculating through the time-steps ----
   for (i in 1:length(Prcpts)) {
 
     if (verbose) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))

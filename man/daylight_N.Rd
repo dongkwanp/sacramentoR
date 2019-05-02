@@ -4,12 +4,14 @@
 \alias{daylight_N}
 \title{N Daylight Hours Model}
 \usage{
-daylight_N(JDate, Latitude)
+daylight_N(JDate, Latitude, LeapYear = FALSE)
 }
 \arguments{
 \item{JDate}{Julian Day of the Year}
 
 \item{Latitude}{Latitude in Degrees}
+
+\item{LeapYear}{Leap Year Flag}
 }
 \value{
 Daylight hours

@@ -3,17 +3,18 @@
 #' Calculating the N daynight hours.
 #'
 #' @param Latitude Latitude in Degrees
-#' @param JDate Julian Day of the Year
-#' @param LeapYear Leap Year Flag
+#' @param Date Date vector
 #'
 #' @return Daylight hours
 #' @details For details see Allen (1998)
 #' @export
 
-daylight_N <- function(JDate, Latitude, LeapYear = FALSE) {
+daylight_N <- function(Date, Latitude) {
 
-  # Declination
-  if (LeapYear) Year <- 366 else Year <- 365
+  JDate <- as.numeric(format(as.Date(Date), '%j'))
+  LeapYear <- utility_isLeapYear(as.numeric(format(Date, '%Y')))
+  Year <- sapply(LeapYear, function(x) if(x) return(366) else return(365))
+
   delta <- 0.409 * base::sin(((2 * pi)/Year) * JDate - 1.39)
 
   # Sunet hour angle

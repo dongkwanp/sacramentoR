@@ -9,7 +9,7 @@
 #' @param Outlet Flag to determine if this is the outlet
 #' @param WatershedCharacteristics Watershed Characteristics Vector c(KE, UH_DAY, DT) (not recommended to change this unless you know what you're doing)
 #' @param preserveInput Flag to preserve the input as part of the output
-#' @param debug Debug Flag
+#' @param verbose Verbose Flag
 #'
 #' @return A list of various time-series as an xts object
 #' @details For details see Lohmann, Nolte-Holube, and Raschke (1996)
@@ -18,8 +18,9 @@
 routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet = FALSE, WatershedCharacteristics = c(12, 96, 3600), preserveInput = FALSE, verbose = FALSE) {
 
   # Preprocessing ----
+  Dates <- zoo::index(directInflow)
   verbose.startTime <- Sys.time()
-  verbose.timeStepTotal <- length(Prcpts)
+  verbose.timeStepTotal <- length(directInflow)
 
   if (verbose) {
     print('Initializing Lohmann Routing Module...')
@@ -32,6 +33,7 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
   if (preserveInput) {
 
     if (verbose) {
+      verbose.subStartTime <- Sys.time()
       print('Saving Inputs with Outputs...')
     }
 
@@ -45,6 +47,10 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
 
 
   # Parameter Defining ----
+  if (verbose) {
+    print('Assigning Parameter Values...')
+  }
+
   if (is.list(Param)) {
     N <- Param$N # Catchment's UH Shape Parameter (N)
     K <- Param$K # Catchment's UH Scale Parameter (K)
@@ -70,11 +76,11 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
   LE <- 48 * 50 # Base time (hr) for Green function values
 
   # Defining Functions ----
-  hruh_fun <- function(x) {
-    shape <- get('N', envir = parent.frame())
-    scale <- (1/get('K', envir = parent.frame()))
-    return(stats::dgamma(x, shape = shape, scale = scale))
+  if (verbose) {
+    print('Loading internal functions...')
   }
+
+  hruh_fun <- function(x) return(stats::dgamma(x, shape = N, scale = 1/K))
 
   # Allocating Memory for Outputs and States of the Model ----
   # Initializing memory for model logics
@@ -82,45 +88,113 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
 
   # Model Logic ----
   # If watershed outlet ====
+  if (verbose) {
+    print('Beginning model logic...')
+  }
   if (Outlet) UHriver[1] <- 1 else {
     # if not...
     # Calculate Green's function to solve Saint-Venant Equation ====
+    if (verbose) {
+      verbose.subStartTime <- Sys.time()
+      print('Calculating Green\'s function...')
+    }
+
     t <- 0
     uhm_grid <- rep(NA, LE)
 
+    if (verbose) {
+      verbose.subforStartTime <- Sys.time()
+      print('Calculating Green\'s function: Loop 1...')
+    }
+
     for (k in 1:LE) {
+
       t <- t + DT
 
       pot <- (((VELO * t) - flowLength) ^ 2) / (4 * DIFF * t)
 
-      if (pot <= 69) H <- (flowLength / (2 * t * sqrt(pi * t * DIFF) * exp(-pot))) else H <- 0
+      if (pot <= 69) H <- ((flowLength / (2 * t * sqrt(pi * t * DIFF))) * exp(-pot)) else H <- 0
 
       uhm_grid[k] <- H
+    }
+
+    if (verbose) {
+      verbose.subforEndTime <- Sys.time()
+      print(paste0('Green\'s Function: Loop 1 took: ', format(verbose.subforEndTime - verbose.subforStartTime)))
     }
 
     if (sum(uhm_grid) == 0) uhm_grid[1] <- 1 else uhm_grid <- (uhm_grid/sum(uhm_grid))
 
     UHM <- uhm_grid
 
-    FR <- data.frame(var1 = rep(0, TMAX), var2 = rep(0, TMAX))
+    FR <- matrix(data = 0, nrow = TMAX, ncol = 2)
     FR[1:24,1] <- 1/24
 
-    for (t in 1:TMAX) for (L in 1:(TMAX + 24)) if ((t - L) > 0) FR$var2[t] <- FR$var2[t] + FR$var1[t-L] * UHM[L]
+    if (verbose) {
+      verbose.subforStartTime <- Sys.time()
+      print('Calculating Green\'s function: Loop 2...')
+    }
 
-    for (t in 1:UH_DAY) UHriver[t] <- sum(FR$var2[((24 * t) - 23):(24 * t)])
+    for (t in 1:TMAX) {
+      L <- 1:(TMAX + 24)
+      L <- L[(t - L) > 0]
 
+      FR[t, 2]<- FR[t,2] + sum(FR[t - L, 1] * UHM[L])
+
+      # for (L in 1:(TMAX + 24)) if ((t - L) > 0) FR$var2[t] <- FR$var2[t] + FR$var1[t-L] * UHM[L]
+    }
+
+    if (verbose) {
+      verbose.subforEndTime <- Sys.time()
+      print(paste0('Green\'s Function: Loop 2 took: ', format(verbose.subforEndTime - verbose.subforStartTime)))
+    }
+
+    if (verbose) {
+      verbose.subforStartTime <- Sys.time()
+      print('Calculating Green\'s function: Loop 3...')
+    }
+
+    UHriver <- sapply(1:UH_DAY, function(t) sum(FR[(24 * t - 23):(24 * t), 2]))
+
+    #for (t in 1:UH_DAY) UHriver[t] <- sum(FR$var2[((24 * t) - 23):(24 * t)])
+
+    if (verbose) {
+      verbose.subforEndTime <- Sys.time()
+      print(paste0('Green\'s Function: Loop 3 took: ', format(verbose.subforEndTime - verbose.subforStartTime)))
+    }
+
+  }
+  if (verbose) {
+    verbose.subEndTime <- Sys.time()
+    print(paste0('Entire Green\'s function took: ', format(verbose.subEndTime - verbose.subStartTime)))
   }
 
   # HRU's UH Represented by Gamma Distribution ====
+  if (verbose) {
+    verbose.subStartTime <- Sys.time()
+    print('Calculating HRU\'s UH through Gamma Distribution...')
+  }
+
   UH_HRU_direct <- rep(0, KE)
 
   for (i in 1:KE) {
     UH_HRU_direct[i] <- integrate(hruh_fun, (24 * (i - 1)), (24 * i))$value
   }
+
   UH_HRU_base <- rep(0, KE)
   UH_HRU_base[1] <- 1
 
+  if (verbose) {
+    verbose.subEndTime <- Sys.time()
+    print(paste0('That took: ', format(verbose.subEndTime - verbose.subStartTime)))
+  }
+
   # Combined UH for HRU's response at the watershed outlet ====
+  if (verbose) {
+    verbose.subStartTime <- Sys.time()
+    print('Combining UH for HRU\'s response...')
+  }
+
   UH_direct <- rep(0, (KE + UH_DAY - 1))
   UH_base <- rep(0, (KE + UH_DAY - 1))
 
@@ -134,11 +208,30 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
   UH_direct <- (UH_direct/sum(UH_direct))
   UH_base <- (UH_base/sum(UH_base))
 
+  if (verbose) {
+    verbose.subEndTime <- Sys.time()
+    print(paste0('That took: ', format(verbose.subEndTime - verbose.subStartTime)))
+  }
+
+
   # Make convolution for watershed outlet total flow ====
+  if (verbose) {
+    verbose.subStartTime <- Sys.time()
+    print('Calculating watershed total flow...')
+  }
+
   directFlow <- rep(0, length(directInflow))
   baseFlow <- rep(0, length(directInflow))
 
   for (i in 1:length(directInflow)) {
+
+#    j <- 1:(KE + UH_DAY - 1)
+#    j <- j[((i - j) + 1) >= 1]
+
+#    directFlow[i] <- directFlow[i] + sum(UH_direct[j] * directInflow[(i - j + 1)])
+#    baseFlow[i] <- baseFlow[i] + sum(UH_base[j] * baseInflow[(i - j + 1)])
+
+
     for (j in 1:(KE + UH_DAY - 1)) {
       if ((i - j + 1) >= 1) {
         directFlow[i] <- directFlow[i] + UH_direct[j] * directInflow[(i - j + 1)]
@@ -146,24 +239,46 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
       }
 
     }
+
+
   }
+
+
 
   TotalStreamflow <- directFlow + baseFlow
 
-  # Writing to Output ----
-  Output$Output$surfaceFlow <- directFlow
-  Output$Output$baseFlow <- baseFlow
-  Output$Output$TotalStreamflow <- TotalStreamflow
+  if (verbose) {
+    verbose.subEndTime <- Sys.time()
+    print(paste0('That took: ', format(verbose.subEndTime - verbose.subStartTime)))
+  }
 
+
+
+  # Writing to Output ----
+  if (verbose) {
+    print('Writing to output...')
+  }
+
+  Output$Output$surfaceFlow <- xts::xts(directFlow, order.by = Dates)
+  Output$Output$baseFlow <- xts::xts(baseFlow, order.by = Dates)
+  Output$Output$TotalStreamflow <- xts::xts(TotalStreamflow, order.by = Dates)
+
+
+  if (verbose){
+    verbose.endTime <- Sys.time()
+    print(paste0('Lohmann Module Run Time: ', format(verbose.endTime - verbose.startTime)))
+  }
+
+  return(Output)
 }
 
 # Lohmann Ranges ----
 routing_lohmann.ranges <- function() {
   list(
     N <- c(NA, NA),
-    K <- c(NA, NA),
-    VELO <- c(NA, NA),
-    DIFF <- c(NA, NA)
+    K <- c(0, 1),
+    VELO <- c(1, 3), # VIC Documentation for a basin in Germany
+    DIFF <- c(200, 4000) # VIC Documentation for a basin in Germany
   )
 }
 
@@ -172,7 +287,7 @@ routing_lohmann.ranges <- function() {
   list(
     N <- NA,
     K <- NA,
-    VELO <- NA,
-    DIFF <- NA
+    VELO <- 2, # Just a number
+    DIFF <- 2000 # Just a number
   )
 }

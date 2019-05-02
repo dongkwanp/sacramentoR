@@ -6,7 +6,7 @@
 \usage{
 hydrology_sacsma(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500,
   500, 0), thresholdZero = 1e-05, ninc_min = 20,
-  preserveInput = FALSE, preserveState = TRUE, verbose = FALSE)
+  preserveInput = FALSE, preserveState = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Param}{hydrology module parameter list}

@@ -4,10 +4,10 @@
 \alias{daylight_CBM}
 \title{CBM Daylight Model}
 \usage{
-daylight_CBM(JDate, Latitude, p = 0.833, ...)
+daylight_CBM(Date, Latitude, p = 0.833)
 }
 \arguments{
-\item{JDate}{Julian Day of the Year}
+\item{Date}{Date vector}
 
 \item{Latitude}{Latitude in Degrees}
 

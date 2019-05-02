@@ -471,7 +471,7 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
 
   if (verbose) {
     verbose.endTime <- Sys.time()
-    print(paste0('Snow Module Run Time: ', format(verbose.endTime - verbose.startTime)))
+    print(paste0('SAC-SMA Module Run Time: ', format(verbose.endTime - verbose.startTime)))
   }
 
   return(Output)

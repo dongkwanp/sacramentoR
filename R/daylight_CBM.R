@@ -5,7 +5,6 @@
 #' @param Latitude Latitude in Degrees
 #' @param JDate Julian Day of the Year
 #' @param p Daylength coefficient (Default: Constant based on Astronomical calendar)
-#' @param LeapYear Leap Year Flag
 #'
 #' @return Daylight hours
 #' @details For details see Forsythe (1995) and Schoolfield (1982)

@@ -5,8 +5,8 @@
 \title{SNOW-17 Snow Module}
 \usage{
 snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
-  dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE,
-  verbose = FALSE, debug = FALSE)
+  dtt = 24, dtp = 24, calcA_v = FALSE, meltFlag = FALSE,
+  preserveInput = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Param}{snow module parameter list}
@@ -25,11 +25,11 @@ snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
 
 \item{calcA_v}{If Latitude is above 60 degrees then calculate A_v for each time-step}
 
+\item{meltFlag}{Output a vector time-series melt flag}
+
 \item{preserveInput}{Flag to preserve the input as part of the output}
 
 \item{verbose}{Verbose Flag}
-
-\item{debug}{Debug Flag}
 }
 \value{
 A list with various time-series outputs (xts objects)

@@ -295,7 +295,7 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   verbose.endTime <- Sys.time()
 
   if (verbose) {
-    print(paste0('Snow Module Run Time: ', format(verbose.endTime - verbose.startTime)))
+    print(paste0('SNOW17 Module Run Time: ', format(verbose.endTime - verbose.startTime)))
   }
 
   return(Output)

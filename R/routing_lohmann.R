@@ -237,7 +237,6 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
         directFlow[i] <- directFlow[i] + UH_direct[j] * directInflow[(i - j + 1)]
         baseFlow[i] <- baseFlow[i] + UH_base[j] * baseInflow[(i - j + 1)]
       }
-
     }
 
 

@@ -6,7 +6,8 @@
 \usage{
 hydrology_sacsma(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500,
   500, 0), thresholdZero = 1e-05, ninc_min = 20,
-  preserveInput = FALSE, preserveState = FALSE, verbose = FALSE)
+  preserveInput = FALSE, preserveState = FALSE, verbose = FALSE,
+  verbose.ts = FALSE)
 }
 \arguments{
 \item{Param}{hydrology module parameter list}
@@ -26,6 +27,8 @@ hydrology_sacsma(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500,
 \item{preserveState}{Flag to preserve state of the model at each time-step}
 
 \item{verbose}{Verbose Flag}
+
+\item{verbose.ts}{Verbose per time-step Flag}
 }
 \value{
 A list of various time-series as an xts object

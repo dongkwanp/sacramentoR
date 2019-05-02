@@ -8,10 +8,5 @@
 #' @export
 
 utility_areaRatio <- function(Area) {
-
-  TotalArea <- sum(Area)
-  output.Area <- Area/TotalArea
-
-  return(output.Area)
-
+  return(Area/sum(Area))
 }

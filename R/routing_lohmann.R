@@ -151,7 +151,7 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
   TotalStreamflow <- directFlow + baseFlow
 
   # Writing to Output ----
-  Output$Output$directFlow <- directFlow
+  Output$Output$surfaceFlow <- directFlow
   Output$Output$baseFlow <- baseFlow
   Output$Output$TotalStreamflow <- TotalStreamflow
 

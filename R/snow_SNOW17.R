@@ -10,6 +10,7 @@
 #' @param dtt Constant time interval of temperature data (hours) (Default: 24 Hours)
 #' @param dtp Constant time interval of precipitation data (hours) (Default: 24 Hours)
 #' @param calcA_v If Latitude is above 60 degrees then calculate A_v for each time-step
+#' @param meltFlag Output a vector time-series melt flag
 #' @param preserveInput Flag to preserve the input as part of the output
 #' @param verbose Verbose Flag
 #'
@@ -17,7 +18,7 @@
 #' @details For details see Anderson (2006) and Anderson (1973)
 #' @export
 
-snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, preserveInput = FALSE, verbose = FALSE) {
+snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, meltFlag = FALSE, preserveInput = FALSE, verbose = FALSE) {
 
   JDate <- format(zoo::index(Prcp), '%j')
 
@@ -282,6 +283,12 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   Output$Output$Outflow <- xts::xts(Outflow, order.by = as.Date(zoo::index(Prcp)))
   Output$Output$melt <- xts::xts(melt, order.by = as.Date(zoo::index(Prcp)))
   Output$Output$SWE <- xts::xts(SWEO, order.by = as.Date(zoo::index(Prcp)))
+
+  # Quick Melt Flag Calculation Afterwards
+  if (meltFlag){
+    meltFlag <- sapply(melt, function(ts){if (ts > 0) return(TRUE) else return(FALSE)})
+    Output$Output$meltFlag <- meltFlag
+  }
 
   verbose.endTime <- Sys.time()
 

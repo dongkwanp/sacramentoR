@@ -11,12 +11,13 @@
 #' @param preserveInput Flag to preserve the input as part of the output
 #' @param preserveState Flag to preserve state of the model at each time-step
 #' @param verbose Verbose Flag
+#' @param verbose.ts Verbose per time-step Flag
 #'
 #' @return A list of various time-series as an xts object
 #' @details For details see NOAA rfs:23sacsma.wpd (2002) and Blasone, et. al. (2008)
 #' @export
 
-hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = FALSE, preserveState = FALSE, verbose = FALSE) {
+hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 500, 500, 0), thresholdZero = 0.00001, ninc_min = 20, preserveInput = FALSE, preserveState = FALSE, verbose = FALSE, verbose.ts = FALSE) {
 
   # Preprocessing ----
   verbose.startTime <- Sys.time()
@@ -121,10 +122,11 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
   surfaceflow.ts <- rep(NA, times = length(Prcpts)) # Modelled Surface and Subsurface Flow
   interflow.ts <- rep(NA, times = length(Prcpts)) # Modelled Interflow Flow
 
+  if (verbose) print('Running the model...')
   # Calculating through the time-steps ----
   for (i in 1:length(Prcpts)) {
 
-    if (verbose) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))
+    if (verbose && verbose.ts) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))
 
     Prcp <- Prcpts[i] # Adjusted precipitation from snow module (assumed)
 

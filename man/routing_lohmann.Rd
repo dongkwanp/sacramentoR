@@ -23,7 +23,7 @@ routing_lohmann(Param, directInflow, baseInflow, flowLength,
 
 \item{preserveInput}{Flag to preserve the input as part of the output}
 
-\item{debug}{Debug Flag}
+\item{verbose}{Verbose Flag}
 }
 \value{
 A list of various time-series as an xts object

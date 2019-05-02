@@ -6,7 +6,7 @@
 \usage{
 snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
   dtt = 24, dtp = 24, calcA_v = FALSE, meltFlag = FALSE,
-  preserveInput = FALSE, verbose = FALSE)
+  preserveInput = FALSE, verbose = FALSE, verbose.ts = FALSE)
 }
 \arguments{
 \item{Param}{snow module parameter list}
@@ -30,6 +30,8 @@ snow_SNOW17(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0),
 \item{preserveInput}{Flag to preserve the input as part of the output}
 
 \item{verbose}{Verbose Flag}
+
+\item{verbose.ts}{Verbose per time-step Flag}
 }
 \value{
 A list with various time-series outputs (xts objects)

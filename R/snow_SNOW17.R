@@ -13,12 +13,13 @@
 #' @param meltFlag Output a vector time-series melt flag
 #' @param preserveInput Flag to preserve the input as part of the output
 #' @param verbose Verbose Flag
+#' @param verbose.ts Verbose per time-step Flag
 #'
 #' @return A list with various time-series outputs (xts objects)
 #' @details For details see Anderson (2006) and Anderson (1973)
 #' @export
 
-snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, meltFlag = FALSE, preserveInput = FALSE, verbose = FALSE) {
+snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, meltFlag = FALSE, preserveInput = FALSE, verbose = FALSE, verbose.ts = FALSE) {
 
   JDate <- format(zoo::index(Prcp), '%j')
 
@@ -95,10 +96,11 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
   if (f_s == 1) f_r <- 1 # A bit of a loophole to coincide with MATLAB version
 
+  if (verbose) print('Running the model...')
   # Primary Loop ----
   for(i in 1:length(Prcp)) {
 
-    if (verbose) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))
+    if (verbose && verbose.ts) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))
 
     T_a <- as.numeric(zoo::coredata(Tavg[i]))
     P_r <- as.numeric(zoo::coredata(Prcp[i]))

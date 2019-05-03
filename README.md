@@ -81,7 +81,7 @@ modules are available for use:
 
 **Routing Models**
 
-1.  Lohmann Routing Model (In Progress)
+1.  Lohmann Routing Model
 
 **Utility Functions**
 

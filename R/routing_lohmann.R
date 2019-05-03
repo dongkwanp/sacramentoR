@@ -75,6 +75,9 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
   TMAX <- UH_DAY * 24 # Base time of river routing UH in hour because DT is for an 1 hour
   LE <- 48 * 50 # Base time (hr) for Green function values
 
+  directInflow.vector <- as.vector(directInflow)
+  baseInflow.vector <- as.vector(baseInflow)
+
   # Defining Functions ----
   if (verbose) {
     print('Loading internal functions...')
@@ -220,25 +223,16 @@ routing_lohmann <- function(Param, directInflow, baseInflow, flowLength, Outlet 
     print('Calculating watershed total flow...')
   }
 
-  directFlow <- rep(0, length(directInflow))
-  baseFlow <- rep(0, length(directInflow))
+  directFlow <- rep(0, length(directInflow.vector))
+  baseFlow <- rep(0, length(directInflow.vector))
 
   for (i in 1:length(directInflow)) {
 
-#    j <- 1:(KE + UH_DAY - 1)
-#    j <- j[((i - j) + 1) >= 1]
+    j <- 1:(KE + UH_DAY - 1)
+    j <- j[((i - j) + 1) >= 1]
 
-#    directFlow[i] <- directFlow[i] + sum(UH_direct[j] * directInflow[(i - j + 1)])
-#    baseFlow[i] <- baseFlow[i] + sum(UH_base[j] * baseInflow[(i - j + 1)])
-
-
-    for (j in 1:(KE + UH_DAY - 1)) {
-      if ((i - j + 1) >= 1) {
-        directFlow[i] <- directFlow[i] + UH_direct[j] * directInflow[(i - j + 1)]
-        baseFlow[i] <- baseFlow[i] + UH_base[j] * baseInflow[(i - j + 1)]
-      }
-    }
-
+    directFlow[i] <- directFlow[i] + sum(UH_direct[j] * directInflow.vector[(i - j + 1)])
+    baseFlow[i] <- baseFlow[i] + sum(UH_base[j] * baseInflow.vector[(i - j + 1)])
 
   }
 

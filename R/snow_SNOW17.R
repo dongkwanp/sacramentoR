@@ -13,19 +13,22 @@
 #' @param meltFlag Output a vector time-series melt flag
 #' @param preserveInput Flag to preserve the input as part of the output
 #' @param verbose Verbose Flag
-#' @param verbose.ts Verbose per time-step Flag
 #'
 #' @return A list with various time-series outputs (xts objects)
 #' @details For details see Anderson (2006) and Anderson (1973)
 #' @export
 
-snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, meltFlag = FALSE, preserveInput = FALSE, verbose = FALSE, verbose.ts = FALSE) {
+snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 0), dtt = 24, dtp = 24, calcA_v = FALSE, meltFlag = FALSE, preserveInput = FALSE, verbose = FALSE) {
 
   JDate <- format(zoo::index(Prcp), '%j')
 
+  Dates.ts <- zoo::index(Prcp)
+  Prcp.vector <- as.vector(Prcp)
+  Tavg.vector <- as.vector(Tavg)
+
   # Preprocessing ----
   verbose.startTime <- Sys.time()
-  verbose.timeStepTotal <- length(Prcp)
+  verbose.timeStepTotal <- length(Prcp.vector)
 
   if (verbose) {
     print('Initializing SNOW17...')
@@ -34,10 +37,10 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
   # Environment Preparation ----
   Output <- list()
   Output$Output <- list()
-  Outflow <- rep(NA, times = length(Prcp))
-  melt <- rep(NA, times = length(Prcp))
-  SWEO <- rep(NA, times = length(Prcp))
-  Depth <- rep(NA, times = length(Prcp))
+  Outflow <- rep(NA, times = length(Prcp.vector))
+  melt <- rep(NA, times = length(Prcp.vector))
+  SWEO <- rep(NA, times = length(Prcp.vector))
+  Depth <- rep(NA, times = length(Prcp.vector))
   Output$FinalState <- list()
 
   # If preserving the input
@@ -96,15 +99,19 @@ snow_SNOW17 <- function(Param, Prcp, Tavg, Elevation, InitialState = c(0, 0, 0, 
 
   if (f_s == 1) f_r <- 1 # A bit of a loophole to coincide with MATLAB version
 
-  if (verbose) print('Running the model...')
+  if (verbose) {
+    print('Running the model...')
+    pb <- utils::txtProgressBar(min = 0, max = verbose.timeStepTotal, style = 3)
+  }
+
   # Primary Loop ----
-  for(i in 1:length(Prcp)) {
+  for(i in 1:length(Prcp.vector)) {
 
-    if (verbose && verbose.ts) print(paste0('Running Time-Step: ', i, ' out of ', verbose.timeStepTotal))
+    if (verbose) setTxtProgressBar(pb, i)
 
-    T_a <- as.numeric(zoo::coredata(Tavg[i]))
-    P_r <- as.numeric(zoo::coredata(Prcp[i]))
-    Date <- as.Date(zoo::index(Prcp[i]))
+    T_a <- Tavg.vector[i]
+    P_r <- Prcp.vector[i]
+    Date <- Dates.ts[i]
 
 
     T_rain <- max(T_a, 0) # Temperature of the Rain

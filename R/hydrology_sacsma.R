@@ -122,8 +122,8 @@ hydrology_sacsma <- function(Param, Prcpts, PETts, InitialState = c(0, 0, 500, 5
   interflow.ts <- rep(NA, times = length(Prcpts)) # Modelled Interflow Flow
 
   if (verbose) {
-    pb <- utils::txtProgressBar(min = 0, max = verbose.timeStepTotal, style = 3)
     print('Running the model...')
+    pb <- utils::txtProgressBar(min = 0, max = verbose.timeStepTotal, style = 3)
   }
 
   # Calculating through the time-steps ----

@@ -3,7 +3,7 @@ sacramentoR
 
 `sacramentoR` builds out the SAC-SMA-DS model within the R environment.
 In addition, `sacramentoR` contains functions and tools to translate
-[prmsR](https://projects.cloudwaterlab.com/UMass/prmsR) hydrologic
+[prmsR](https://github.com/dongkwanp/prmsR) hydrologic
 models to SAC-SMA models as easily and as effectively as possible. This
 library is intended to be used by [University of Massachusetts Amherst
 Hydrosystems Research Group](http://blogs.umass.edu/hydrosystems/). The
@@ -12,7 +12,7 @@ function of this library is to:
 1.  Build a distributed Sacramento Soil Moisture Accounting Model
 2.  Translate PRMS Models to SAC-SMA
 
-Questions? Comments? Concerns? Contact [Don](mailto:donpark@umass.edu).
+Questions? Comments? Concerns? Submit an issue!
 
 Dependencies
 ------------
@@ -38,12 +38,12 @@ accessed via HTTPS or SSH. Both options are outlined below.
 Within R, execute the following lines in order to install `sacramentoR`.
 
     install.packages(c('devtools', 'git2r'))
-    devtools::install_git('https://projects.cloudwaterlab.com/UMass/sacramentoR.git')
+    devtools::install_git('https://github.com/dongkwanp/sacramentoR.git')
 
 ### Access via SSH
 
     install.packages(c('git2r', 'devtools'))
-    devtools::install_git("git@projects.cloudwaterlab.com:UMass/sacramentoR.git")
+    devtools::install_git("git@github.com:dongkwanp/sacramentoR.git")
 
 How to Use
 ----------
@@ -77,7 +77,7 @@ modules are available for use:
 
 1.  Sacramento Soil Moisture Accounting Model
 2.  Conversion from PRMS (via
-    [prmsR](https://projects.cloudwaterlab.com/UMass/prmsR))
+    [prmsR](https://github.com/dongkwanp/prmsR))
 
 **Routing Models**
 
@@ -97,4 +97,4 @@ Troubleshooting
 environment. However, the code should be platform neutral and work with
 Windows or MacOS systems as well. If there are any issues or problems,
 feel free to open an issue in our [issue
-tracker](https://projects.cloudwaterlab.com/UMass/sacramentoR/issues).
+tracker](https://github.com/dongkwanp/sacramentoR/issues).

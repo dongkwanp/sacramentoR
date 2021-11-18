@@ -12,6 +12,8 @@ function of this library is to:
 1.  Build a distributed Sacramento Soil Moisture Accounting Model
 2.  Translate PRMS Models to SAC-SMA
 
+Certain parts of the code is inspired from [Dr. Sungwook Wi](https://scholar.google.com/citations?user=G6H6U8AAAAAJ&hl=en)'s Sacramento model in MATLAB.
+
 Questions? Comments? Concerns? Submit an issue!
 
 Dependencies

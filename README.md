@@ -1,7 +1,7 @@
 sacramentoR
 -----------
 
-`sacramentoR` builds out the SAC-SMA-DS model within the R environment.
+`sacramentoR` builds out the SAC-SMA distributed model within the R environment.
 In addition, `sacramentoR` contains functions and tools to translate
 [prmsR](https://github.com/dongkwanp/prmsR) hydrologic
 models to SAC-SMA models as easily and as effectively as possible. This
